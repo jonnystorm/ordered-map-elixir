@@ -1,6 +1,10 @@
 # OrderedMap
 
-**TODO: Add description**
+[![Build Status](https://travis-ci.org/jonnystorm/ordered-map-elixir.svg?branch=master)](https://travis-ci.org/jonnystorm/ordered-map-elixir)
+
+An order-preserving map implementation for Elixir.
+
+See the [docs](https://jonnystorm.github.io/ordered-map-elixir).
 
 ## Installation
 
