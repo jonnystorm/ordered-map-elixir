@@ -128,6 +128,15 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#keys/1">keys(ordered_map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns all keys from <code class="inline">ordered_map</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#new/0">new()</a>
   </div>
   
@@ -141,6 +150,15 @@
   </div>
   
     <div class="summary-synopsis"><p>Puts the given <code class="inline">value</code> under <code class="inline">key</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#values/1">values(ordered_map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns all values from <code class="inline">ordered_map</code></p>
 </div>
   
 </div>
@@ -282,6 +300,36 @@ false</code></pre>
 
   </section>
 </div>
+<div class="detail" id="keys/1">
+  <div class="detail-header">
+    <a href="#keys/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">keys(ordered_map)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L108" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Returns all keys from <code class="inline">ordered_map</code>.</p>
+<h2 id="keys/1-examples" class="section-heading">
+  <a href="#keys/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+iex&gt; OrderedMap.keys(ordered_map)
+[&quot;key1&quot;, &quot;key2&quot;]
+
+iex&gt; OrderedMap.keys(%OrderedMap{})
+[]</code></pre>
+
+  </section>
+</div>
 <div class="detail" id="new/0">
   <div class="detail-header">
     <a href="#new/0" class="detail-link" title="Link to this function">
@@ -315,7 +363,7 @@ false</code></pre>
     </a>
     <span class="signature">put(ordered_map, key, value)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L108" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L122" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -334,6 +382,35 @@ iex&gt; ordered_map = OrderedMap.put(ordered_map, &quot;key1&quot;, 1)
 %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
 iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
 %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="values/1">
+  <div class="detail-header">
+    <a href="#values/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">values(ordered_map)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L146" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Returns all values from <code class="inline">ordered_map</code>.</p>
+<h2 id="values/1-examples" class="section-heading">
+  <a href="#values/1-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<p>  iex&gt; ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{“key1” =&gt; 1, “key2” =&gt; 2}, size: 2}
+  iex&gt; OrderedMap.values(ordered_map)
+  [1, 2]</p>
+<p>  iex&gt; OrderedMap.values(%OrderedMap{})
+  []</p>
 
   </section>
 </div>
