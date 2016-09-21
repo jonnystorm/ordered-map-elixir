@@ -4,7 +4,7 @@
 
 An order-preserving map implementation for Elixir.
 
-See the [docs](https://jonnystorm.github.io/ordered-map-elixir).
+See the [documentation](https://jonnystorm.github.io/ordered-map-elixir).
 
 ## Installation
 
