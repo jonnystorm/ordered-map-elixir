@@ -95,6 +95,20 @@ defmodule OrderedMap do
   end
 
   @doc """
+  Returns all keys from `ordered_map`.
+
+  ## Examples
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.keys(ordered_map)
+      ["key1", "key2"]
+
+      iex> OrderedMap.keys(%OrderedMap{})
+      []
+  """
+  def keys(ordered_map)
+  def keys(%OrderedMap{keys: keys}), do: Enum.reverse(keys)
+
+  @doc """
   Puts the given `value` under `key`.
 
   ## Examples
@@ -115,6 +129,23 @@ defmodule OrderedMap do
        map: Map.put(map, key, value),
       size: new_size,
     }
+  end
+
+  @doc """
+  Returns all values from `ordered_map`.
+
+  ## Examples
+
+    iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+    iex> OrderedMap.values(ordered_map)
+    [1, 2]
+
+    iex> OrderedMap.values(%OrderedMap{})
+    []
+  """
+  def values(ordered_map)
+  def values(%OrderedMap{} = ordered_map) do
+    Enum.map(ordered_map, & elem(&1, 1))
   end
 end
 
