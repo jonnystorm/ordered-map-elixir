@@ -4,7 +4,7 @@ defmodule OrderedMap.Mixfile do
   def project do
     [ app: :ordered_map,
       version: "0.0.1",
-      name: OrderedMap,
+      name: "OrderedMap",
       source_url: "https://github.com/jonnystorm/ordered-map-elixir",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
