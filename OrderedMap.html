@@ -155,6 +155,24 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#put_new/3">put_new(ordered_map, key, value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Puts the given <code class="inline">value</code> under <code class="inline">key</code> unless the entry <code class="inline">key</code> already exists</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#put_new!/3">put_new!(ordered_map, key, value)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Puts the given <code class="inline">value</code> under <code class="inline">key</code>. If <code class="inline">key</code> exists, a <a href="http://elixir-lang.org/docs/stable/elixir/KeyError.html"><code class="inline">KeyError</code></a> is raised</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#values/1">values(ordered_map)</a>
   </div>
   
@@ -385,6 +403,64 @@ iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
 
   </section>
 </div>
+<div class="detail" id="put_new/3">
+  <div class="detail-header">
+    <a href="#put_new/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_new(ordered_map, key, value)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L145" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Puts the given <code class="inline">value</code> under <code class="inline">key</code> unless the entry <code class="inline">key</code> already exists.</p>
+<h2 id="put_new/3-examples" class="section-heading">
+  <a href="#put_new/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{}
+iex&gt; ordered_map = OrderedMap.put_new(ordered_map, &quot;key1&quot;, 1)
+%OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
+iex&gt; OrderedMap.put_new(ordered_map, &quot;key1&quot;, 2)
+%OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="put_new!/3">
+  <div class="detail-header">
+    <a href="#put_new!/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put_new!(ordered_map, key, value)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L165" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    <p>Puts the given <code class="inline">value</code> under <code class="inline">key</code>. If <code class="inline">key</code> exists, a <a href="http://elixir-lang.org/docs/stable/elixir/KeyError.html"><code class="inline">KeyError</code></a> is raised.</p>
+<h2 id="put_new!/3-examples" class="section-heading">
+  <a href="#put_new!/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{}
+iex&gt; ordered_map = OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 1)
+%OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
+iex&gt; OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 2)
+** (RuntimeError) key &quot;key1&quot; already exists in: %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}</code></pre>
+
+  </section>
+</div>
 <div class="detail" id="values/1">
   <div class="detail-header">
     <a href="#values/1" class="detail-link" title="Link to this function">
@@ -392,7 +468,7 @@ iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
     </a>
     <span class="signature">values(ordered_map)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L146" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L186" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
