@@ -132,6 +132,46 @@ defmodule OrderedMap do
   end
 
   @doc """
+  Puts the given `value` under `key` unless the entry `key` already exists.
+
+  ## Examples
+
+      iex> ordered_map = %OrderedMap{}
+      iex> ordered_map = OrderedMap.put_new(ordered_map, "key1", 1)
+      %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
+      iex> OrderedMap.put_new(ordered_map, "key1", 2)
+      %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
+  """
+  def put_new(ordered_map, key, value)
+  def put_new(%OrderedMap{map: map} = ordered_map, key, value) do
+    if map[key] do
+      ordered_map
+    else
+      put(ordered_map, key, value)
+    end
+  end
+
+  @doc """
+  Puts the given `value` under `key`. If `key` exists, a `KeyError` is raised.
+
+  ## Examples
+
+      iex> ordered_map = %OrderedMap{}
+      iex> ordered_map = OrderedMap.put_new!(ordered_map, "key1", 1)
+      %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
+      iex> OrderedMap.put_new!(ordered_map, "key1", 2)
+      ** (RuntimeError) key "key1" already exists in: %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
+  """
+  def put_new!(ordered_map, key, value)
+  def put_new!(%OrderedMap{map: map} = ordered_map, key, value) do
+    if map[key] do
+      raise "key #{inspect key} already exists in: #{inspect ordered_map}"
+    else
+      put(ordered_map, key, value)
+    end
+  end
+
+  @doc """
   Returns all values from `ordered_map`.
 
   ## Examples
