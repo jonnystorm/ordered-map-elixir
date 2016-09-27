@@ -20,6 +20,8 @@ defmodule OrderedMap do
       iex> OrderedMap.new
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
+  @spec new :: OrderedMap.t
+
   def new, do: %OrderedMap{}
 
   @doc """
@@ -38,6 +40,8 @@ defmodule OrderedMap do
       iex> OrderedMap.delete(%OrderedMap{}, "key")
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
+  @spec delete(OrderedMap.t, term) :: OrderedMap.t
+
   def delete(ordered_map, key)
   def delete(%OrderedMap{keys: keys, map: map, size: size} = ordered_map, key)
       when size > 0
@@ -74,6 +78,8 @@ defmodule OrderedMap do
       iex> OrderedMap.get(%OrderedMap{}, "key", :some_default)
       :some_default
   """
+  @spec get(OrderedMap.t, term, term) :: OrderedMap.t
+
   def get(ordered_map, key, default \\ nil)
   def get(%OrderedMap{map: map}, key, default), do: map[key] || default
 
@@ -89,6 +95,8 @@ defmodule OrderedMap do
       iex> OrderedMap.has_key?(%OrderedMap{}, "key")
       false
   """
+  @spec has_key?(OrderedMap.t, term) :: OrderedMap.t
+
   def has_key?(ordered_map, key)
   def has_key?(%OrderedMap{map: map}, key) do
     Map.has_key?(map, key)
@@ -105,6 +113,8 @@ defmodule OrderedMap do
       iex> OrderedMap.keys(%OrderedMap{})
       []
   """
+  @spec keys(OrderedMap.t) :: [term]
+
   def keys(ordered_map)
   def keys(%OrderedMap{keys: keys}), do: Enum.reverse(keys)
 
@@ -119,6 +129,8 @@ defmodule OrderedMap do
       iex> OrderedMap.put(ordered_map, "key2", 2)
       %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
   """
+  @spec put(OrderedMap.t, term, term) :: OrderedMap.t
+
   def put(ordered_map, key, value)
   def put(%OrderedMap{keys: keys, map: map, size: size}, key, value) do
     new_keys = (map[key] && keys) || [key | keys]
@@ -142,6 +154,8 @@ defmodule OrderedMap do
       iex> OrderedMap.put_new(ordered_map, "key1", 2)
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
   """
+  @spec put_new(OrderedMap.t, term, term) :: OrderedMap.t
+
   def put_new(ordered_map, key, value)
   def put_new(%OrderedMap{map: map} = ordered_map, key, value) do
     if map[key] do
@@ -152,7 +166,7 @@ defmodule OrderedMap do
   end
 
   @doc """
-  Puts the given `value` under `key`. If `key` exists, a `KeyError` is raised.
+  Puts the given `value` under `key`. If `key` exists, a `RuntimeError` is raised.
 
   ## Examples
 
@@ -162,6 +176,8 @@ defmodule OrderedMap do
       iex> OrderedMap.put_new!(ordered_map, "key1", 2)
       ** (RuntimeError) key "key1" already exists in: %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
   """
+  @spec put_new!(OrderedMap.t, term, term) :: OrderedMap.t | no_return
+
   def put_new!(ordered_map, key, value)
   def put_new!(%OrderedMap{map: map} = ordered_map, key, value) do
     if map[key] do
@@ -176,13 +192,15 @@ defmodule OrderedMap do
 
   ## Examples
 
-    iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
-    iex> OrderedMap.values(ordered_map)
-    [1, 2]
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.values(ordered_map)
+      [1, 2]
 
-    iex> OrderedMap.values(%OrderedMap{})
-    []
+      iex> OrderedMap.values(%OrderedMap{})
+      []
   """
+  @spec values(OrderedMap.t) :: [term]
+
   def values(ordered_map)
   def values(%OrderedMap{} = ordered_map) do
     Enum.map(ordered_map, & elem(&1, 1))
