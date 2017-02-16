@@ -86,6 +86,12 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#t:key/0">key()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#t:t/0">t()</a>
   </div>
   
@@ -110,10 +116,28 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#fetch/2">fetch(ordered_map, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Fetches the value for a specific <code class="inline">key</code> in the given <code class="inline">ordered_map</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#get/3">get(ordered_map, key, default \\ nil)</a>
   </div>
   
     <div class="summary-synopsis"><p>Gets the value for a specific <code class="inline">key</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_and_update/3">get_and_update(ordered_map, key, fun)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Gets the value from <code class="inline">key</code> and updates it, all in one pass</p>
 </div>
   
 </div>
@@ -141,6 +165,15 @@
   </div>
   
     <div class="summary-synopsis"><p>Returns a new ordered map</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pop/2">pop(ordered_map, key)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns and removes the value associated with <code class="inline">key</code> in <code class="inline">ordered_map</code></p>
 </div>
   
 </div>
@@ -200,7 +233,11 @@
             Types
           </h1>
           <div class="types-list">
-            <div id="t:t/0" class="type-detail">
+            <div id="t:key/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:key/0">key</a> :: any</code></pre>
+  
+</div>
+<div id="t:t/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:t/0">t</a> :: %OrderedMap{keys: list, map: map, size: non_neg_integer}</code></pre>
   
 </div>
@@ -224,7 +261,7 @@
     </a>
     <span class="signature">delete(ordered_map, key)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L45" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L49" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -235,7 +272,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">delete(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term) :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">delete(<a href="#t:t/0">t</a>, <a href="#t:key/0">key</a>) :: <a href="#t:t/0">t</a></code></pre>
         
       </div>
     </div>
@@ -255,17 +292,17 @@ iex&gt; ordered_map = %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&qu
 iex&gt; OrderedMap.delete(ordered_map, &quot;key2&quot;)
 %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
 
-iex&gt; OrderedMap.delete(%OrderedMap{}, &quot;key&quot;)
+iex&gt; OrderedMap.delete(OrderedMap.new(), &quot;key&quot;)
 %OrderedMap{keys: [], map: %{}, size: 0}</code></pre>
 
   </section>
 </div>
-<div class="detail" id="get/3">
+<div class="detail" id="fetch/2">
   <div class="detail-header">
-    <a href="#get/3" class="detail-link" title="Link to this function">
+    <a href="#fetch/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get(ordered_map, key, default \\ nil)</span>
+    <span class="signature">fetch(ordered_map, key)</span>
     
       <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L83" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
@@ -278,7 +315,47 @@ iex&gt; OrderedMap.delete(%OrderedMap{}, &quot;key&quot;)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term, term) :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">fetch(<a href="#t:t/0">t</a>, <a href="#t:key/0">key</a>) :: {:ok, term} | :error</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Fetches the value for a specific <code class="inline">key</code> in the given <code class="inline">ordered_map</code>.</p>
+<h2 id="fetch/2-examples" class="section-heading">
+  <a href="#fetch/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+iex&gt; OrderedMap.fetch(ordered_map, &quot;key1&quot;)
+{:ok, 1}
+
+iex&gt; ordered_map = OrderedMap.new()
+iex&gt; OrderedMap.fetch(ordered_map, &quot;key&quot;)
+:error</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="get/3">
+  <div class="detail-header">
+    <a href="#get/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get(ordered_map, key, default \\ nil)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L112" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get(<a href="#t:t/0">t</a>, <a href="#t:key/0">key</a>, default :: term) :: term</code></pre>
         
       </div>
     </div>
@@ -298,22 +375,22 @@ iex&gt; ordered_map = %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&qu
 iex&gt; OrderedMap.get(ordered_map, &quot;key2&quot;)
 nil
 
-iex&gt; OrderedMap.get(%OrderedMap{}, &quot;key&quot;)
+iex&gt; OrderedMap.get(OrderedMap.new(), &quot;key&quot;)
 nil
 
-iex&gt; OrderedMap.get(%OrderedMap{}, &quot;key&quot;, :some_default)
+iex&gt; OrderedMap.get(OrderedMap.new(), &quot;key&quot;, :some_default)
 :some_default</code></pre>
 
   </section>
 </div>
-<div class="detail" id="has_key?/2">
+<div class="detail" id="get_and_update/3">
   <div class="detail-header">
-    <a href="#has_key?/2" class="detail-link" title="Link to this function">
+    <a href="#get_and_update/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">has_key?(ordered_map, key)</span>
+    <span class="signature">get_and_update(ordered_map, key, fun)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L100" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L127" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -324,7 +401,43 @@ iex&gt; OrderedMap.get(%OrderedMap{}, &quot;key&quot;, :some_default)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">has_key?(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term) :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">get_and_update(<a href="#t:t/0">t</a>, <a href="#t:key/0">key</a>, list) :: {term, <a href="#t:t/0">t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Gets the value from <code class="inline">key</code> and updates it, all in one pass.</p>
+<h2 id="get_and_update/3-examples" class="section-heading">
+  <a href="#get_and_update/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+iex&gt; OrderedMap.get_and_update(ordered_map, &quot;key1&quot;, fn current -&gt; {current, 3} end)
+{1, %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 3, &quot;key2&quot; =&gt; 2}, size: 2}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="has_key?/2">
+  <div class="detail-header">
+    <a href="#has_key?/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">has_key?(ordered_map, key)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L153" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">has_key?(<a href="#t:t/0">t</a>, term) :: <a href="#t:t/0">t</a></code></pre>
         
       </div>
     </div>
@@ -340,7 +453,7 @@ iex&gt; OrderedMap.get(%OrderedMap{}, &quot;key&quot;, :some_default)
 iex&gt; OrderedMap.has_key?(ordered_map, &quot;key1&quot;)
 true
 
-iex&gt; OrderedMap.has_key?(%OrderedMap{}, &quot;key&quot;)
+iex&gt; OrderedMap.has_key?(OrderedMap.new(), &quot;key&quot;)
 false</code></pre>
 
   </section>
@@ -352,7 +465,7 @@ false</code></pre>
     </a>
     <span class="signature">keys(ordered_map)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L118" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L171" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -363,7 +476,7 @@ false</code></pre>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">keys(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>) :: [term]</code></pre>
+          <pre><code class="elixir">keys(<a href="#t:t/0">t</a>) :: [term]</code></pre>
         
       </div>
     </div>
@@ -379,7 +492,7 @@ false</code></pre>
 iex&gt; OrderedMap.keys(ordered_map)
 [&quot;key1&quot;, &quot;key2&quot;]
 
-iex&gt; OrderedMap.keys(%OrderedMap{})
+iex&gt; OrderedMap.keys(OrderedMap.new())
 []</code></pre>
 
   </section>
@@ -391,7 +504,7 @@ iex&gt; OrderedMap.keys(%OrderedMap{})
     </a>
     <span class="signature">new()</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L25" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L29" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -402,7 +515,7 @@ iex&gt; OrderedMap.keys(%OrderedMap{})
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">new :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">new :: <a href="#t:t/0">t</a></code></pre>
         
       </div>
     </div>
@@ -414,19 +527,19 @@ iex&gt; OrderedMap.keys(%OrderedMap{})
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; OrderedMap.new
+<pre><code class="iex elixir">iex&gt; OrderedMap.new()
 %OrderedMap{keys: [], map: %{}, size: 0}</code></pre>
 
   </section>
 </div>
-<div class="detail" id="put/3">
+<div class="detail" id="pop/2">
   <div class="detail-header">
-    <a href="#put/3" class="detail-link" title="Link to this function">
+    <a href="#pop/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">put(ordered_map, key, value)</span>
+    <span class="signature">pop(ordered_map, key)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L134" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L186" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -437,7 +550,43 @@ iex&gt; OrderedMap.keys(%OrderedMap{})
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">put(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term, term) :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">pop(<a href="#t:t/0">t</a>, <a href="#t:key/0">key</a>) :: {term, <a href="#t:t/0">t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns and removes the value associated with <code class="inline">key</code> in <code class="inline">ordered_map</code>.</p>
+<h2 id="pop/2-examples" class="section-heading">
+  <a href="#pop/2-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
+<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+iex&gt; OrderedMap.pop(ordered_map, &quot;key1&quot;)
+{1, %OrderedMap{keys: [&quot;key2&quot;], map: %{&quot;key2&quot; =&gt; 2}, size: 1}}</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="put/3">
+  <div class="detail-header">
+    <a href="#put/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">put(ordered_map, key, value)</span>
+    
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L216" class="view-source" rel="help" title="View Source">
+       <i class="icon-code"></i>
+     </a>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">put(<a href="#t:t/0">t</a>, term, term) :: <a href="#t:t/0">t</a></code></pre>
         
       </div>
     </div>
@@ -449,11 +598,15 @@ iex&gt; OrderedMap.keys(%OrderedMap{})
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{}
+<pre><code class="iex elixir">iex&gt; ordered_map = OrderedMap.new()
 iex&gt; ordered_map = OrderedMap.put(ordered_map, &quot;key1&quot;, 1)
 %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
 iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
-%OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}</code></pre>
+%OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+
+iex&gt; ordered_map = %OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 2}, size: 2}
+iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 3)
+%OrderedMap{keys: [&quot;key2&quot;, &quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1, &quot;key2&quot; =&gt; 3}, size: 2}</code></pre>
 
   </section>
 </div>
@@ -464,7 +617,7 @@ iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
     </a>
     <span class="signature">put_new(ordered_map, key, value)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L159" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L241" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -475,7 +628,7 @@ iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">put_new(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term, term) :: <a href="OrderedMap.html#t:t/0">OrderedMap.t</a></code></pre>
+          <pre><code class="elixir">put_new(<a href="#t:t/0">t</a>, term, term) :: <a href="#t:t/0">t</a></code></pre>
         
       </div>
     </div>
@@ -487,7 +640,7 @@ iex&gt; OrderedMap.put(ordered_map, &quot;key2&quot;, 2)
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{}
+<pre><code class="iex elixir">iex&gt; ordered_map = OrderedMap.new()
 iex&gt; ordered_map = OrderedMap.put_new(ordered_map, &quot;key1&quot;, 1)
 %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
 iex&gt; OrderedMap.put_new(ordered_map, &quot;key1&quot;, 2)
@@ -502,7 +655,7 @@ iex&gt; OrderedMap.put_new(ordered_map, &quot;key1&quot;, 2)
     </a>
     <span class="signature">put_new!(ordered_map, key, value)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L181" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L263" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -513,9 +666,7 @@ iex&gt; OrderedMap.put_new(ordered_map, &quot;key1&quot;, 2)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">put_new!(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>, term, term) ::
-  <a href="OrderedMap.html#t:t/0">OrderedMap.t</a> |
-  no_return</code></pre>
+          <pre><code class="elixir">put_new!(<a href="#t:t/0">t</a>, term, term) :: <a href="#t:t/0">t</a> | no_return</code></pre>
         
       </div>
     </div>
@@ -527,7 +678,7 @@ iex&gt; OrderedMap.put_new(ordered_map, &quot;key1&quot;, 2)
   Examples
 </h2>
 
-<pre><code class="iex elixir">iex&gt; ordered_map = %OrderedMap{}
+<pre><code class="iex elixir">iex&gt; ordered_map = OrderedMap.new()
 iex&gt; ordered_map = OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 1)
 %OrderedMap{keys: [&quot;key1&quot;], map: %{&quot;key1&quot; =&gt; 1}, size: 1}
 iex&gt; OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 2)
@@ -542,7 +693,7 @@ iex&gt; OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 2)
     </a>
     <span class="signature">values(ordered_map)</span>
     
-      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L204" class="view-source" rel="help" title="View Source">
+      <a href="https://github.com/jonnystorm/ordered-map-elixir/blob/master/lib/ordered_map.ex#L286" class="view-source" rel="help" title="View Source">
        <i class="icon-code"></i>
      </a>
     
@@ -553,7 +704,7 @@ iex&gt; OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 2)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">values(<a href="OrderedMap.html#t:t/0">OrderedMap.t</a>) :: [term]</code></pre>
+          <pre><code class="elixir">values(<a href="#t:t/0">t</a>) :: [term]</code></pre>
         
       </div>
     </div>
@@ -569,7 +720,7 @@ iex&gt; OrderedMap.put_new!(ordered_map, &quot;key1&quot;, 2)
 iex&gt; OrderedMap.values(ordered_map)
 [1, 2]
 
-iex&gt; OrderedMap.values(%OrderedMap{})
+iex&gt; OrderedMap.values(OrderedMap.new())
 []</code></pre>
 
   </section>
