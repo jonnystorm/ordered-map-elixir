@@ -1,15 +1,19 @@
-# Copyright © 2016 Jonathan Storm <the.jonathan.storm@gmail.com>
+# Copyright © 2017 Jonathan Storm <jds@idio.link>
 # This work is free. You can redistribute it and/or modify it under the
 # terms of the Do What The Fuck You Want To Public License, Version 2,
 # as published by Sam Hocevar. See the COPYING.WTFPL file for more details.
 
 defmodule OrderedMap do
-  defstruct keys: [], map: %{}, size: 0
+  defstruct keys: nil, map: nil, size: nil
+
+  @behaviour Access
+
+  @type key :: any
 
   @type t :: %OrderedMap{
     keys: list,
-    map: map,
-    size: non_neg_integer
+     map: map,
+    size: non_neg_integer,
   }
 
   @doc """
@@ -17,12 +21,12 @@ defmodule OrderedMap do
 
   ## Examples
 
-      iex> OrderedMap.new
+      iex> OrderedMap.new()
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
-  @spec new :: OrderedMap.t
+  @spec new :: t
 
-  def new, do: %OrderedMap{}
+  def new, do: %OrderedMap{keys: [], map: %{}, size: 0}
 
   @doc """
   Deletes the entry in `ordered_map` having key `key`.
@@ -37,13 +41,13 @@ defmodule OrderedMap do
       iex> OrderedMap.delete(ordered_map, "key2")
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
 
-      iex> OrderedMap.delete(%OrderedMap{}, "key")
+      iex> OrderedMap.delete(OrderedMap.new(), "key")
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
-  @spec delete(OrderedMap.t, term) :: OrderedMap.t
+  @spec delete(t, key) :: t
 
   def delete(ordered_map, key)
-  def delete(%OrderedMap{keys: keys, map: map, size: size} = ordered_map, key)
+  def delete(%{keys: keys, map: map, size: size} = ordered_map, key)
       when size > 0
   do
     if map[key] do
@@ -57,7 +61,32 @@ defmodule OrderedMap do
       ordered_map
     end
   end
-  def delete(%OrderedMap{} = ordered_map, _), do: ordered_map
+
+  def delete(%OrderedMap{} = ordered_map, _),
+    do: ordered_map
+
+  @doc """
+  Fetches the value for a specific `key` in the given `ordered_map`.
+
+  ## Examples
+
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.fetch(ordered_map, "key1")
+      {:ok, 1}
+
+      iex> ordered_map = OrderedMap.new()
+      iex> OrderedMap.fetch(ordered_map, "key")
+      :error
+  """
+  @spec fetch(t, key) :: {:ok, term} | :error
+
+  def fetch(ordered_map, key) do
+    if value = get(ordered_map, key) do
+      {:ok, value}
+    else
+      :error
+    end
+  end
 
   @doc """
   Gets the value for a specific `key`.
@@ -72,16 +101,40 @@ defmodule OrderedMap do
       iex> OrderedMap.get(ordered_map, "key2")
       nil
 
-      iex> OrderedMap.get(%OrderedMap{}, "key")
+      iex> OrderedMap.get(OrderedMap.new(), "key")
       nil
 
-      iex> OrderedMap.get(%OrderedMap{}, "key", :some_default)
+      iex> OrderedMap.get(OrderedMap.new(), "key", :some_default)
       :some_default
   """
-  @spec get(OrderedMap.t, term, term) :: OrderedMap.t
+  @spec get(t, key, default :: term) :: term
 
   def get(ordered_map, key, default \\ nil)
-  def get(%OrderedMap{map: map}, key, default), do: map[key] || default
+  def get(%{map: map}, key, default),
+    do: map[key] || default
+
+  @doc """
+  Gets the value from `key` and updates it, all in one pass.
+
+  ## Examples
+
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.get_and_update(ordered_map, "key1", fn current -> {current, 3} end)
+      {1, %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 3, "key2" => 2}, size: 2}}
+  """
+  @spec get_and_update(t, key, list) :: {term, t}
+
+  def get_and_update(ordered_map, key, fun) when is_function(fun) do
+    case fun.(get(ordered_map, key)) do
+      {return_value, new_value} ->
+        new = put(ordered_map, key, new_value)
+
+        {return_value, new}
+
+      :pop ->
+        pop(ordered_map, key)
+    end
+  end
 
   @doc """
   Returns whether a given `key` exists in the given `ordered_map`.
@@ -92,49 +145,78 @@ defmodule OrderedMap do
       iex> OrderedMap.has_key?(ordered_map, "key1")
       true
 
-      iex> OrderedMap.has_key?(%OrderedMap{}, "key")
+      iex> OrderedMap.has_key?(OrderedMap.new(), "key")
       false
   """
-  @spec has_key?(OrderedMap.t, term) :: OrderedMap.t
+  @spec has_key?(t, term) :: t
 
   def has_key?(ordered_map, key)
-  def has_key?(%OrderedMap{map: map}, key) do
-    Map.has_key?(map, key)
-  end
+  def has_key?(%{map: map}, key),
+    do: Map.has_key?(map, key)
 
   @doc """
   Returns all keys from `ordered_map`.
 
   ## Examples
+
       iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
       iex> OrderedMap.keys(ordered_map)
       ["key1", "key2"]
 
-      iex> OrderedMap.keys(%OrderedMap{})
+      iex> OrderedMap.keys(OrderedMap.new())
       []
   """
-  @spec keys(OrderedMap.t) :: [term]
+  @spec keys(t) :: [term]
 
   def keys(ordered_map)
-  def keys(%OrderedMap{keys: keys}), do: Enum.reverse(keys)
+  def keys(%{keys: keys}),
+    do: Enum.reverse(keys)
+
+  @doc """
+  Returns and removes the value associated with `key` in `ordered_map`.
+
+  ## Examples
+
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.pop(ordered_map, "key1")
+      {1, %OrderedMap{keys: ["key2"], map: %{"key2" => 2}, size: 1}}
+  """
+  @spec pop(t, key) :: {term, t}
+
+  def pop(ordered_map, key)
+  def pop(%{keys: keys, map: map, size: size}, key) do
+    {value, vestige} = Map.pop(map, key)
+
+    new = %OrderedMap{
+       keys: List.delete(keys, key),
+        map: vestige,
+       size: size - 1,
+    }
+
+    {value, new}
+  end
 
   @doc """
   Puts the given `value` under `key`.
 
   ## Examples
 
-      iex> ordered_map = %OrderedMap{}
+      iex> ordered_map = OrderedMap.new()
       iex> ordered_map = OrderedMap.put(ordered_map, "key1", 1)
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
       iex> OrderedMap.put(ordered_map, "key2", 2)
       %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+
+      iex> ordered_map = %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 2}, size: 2}
+      iex> OrderedMap.put(ordered_map, "key2", 3)
+      %OrderedMap{keys: ["key2", "key1"], map: %{"key1" => 1, "key2" => 3}, size: 2}
   """
-  @spec put(OrderedMap.t, term, term) :: OrderedMap.t
+  @spec put(t, term, term) :: t
 
   def put(ordered_map, key, value)
-  def put(%OrderedMap{keys: keys, map: map, size: size}, key, value) do
-    new_keys = (map[key] && keys) || [key | keys]
-    new_size = (map[key] && size) || size + 1
+  def put(%{keys: keys, map: map, size: size}, key, value) do
+    new_keys = map[key] && keys || [key|keys]
+    new_size = map[key] && size || size + 1
 
     %OrderedMap{
       keys: new_keys,
@@ -148,16 +230,16 @@ defmodule OrderedMap do
 
   ## Examples
 
-      iex> ordered_map = %OrderedMap{}
+      iex> ordered_map = OrderedMap.new()
       iex> ordered_map = OrderedMap.put_new(ordered_map, "key1", 1)
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
       iex> OrderedMap.put_new(ordered_map, "key1", 2)
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
   """
-  @spec put_new(OrderedMap.t, term, term) :: OrderedMap.t
+  @spec put_new(t, term, term) :: t
 
   def put_new(ordered_map, key, value)
-  def put_new(%OrderedMap{map: map} = ordered_map, key, value) do
+  def put_new(%{map: map} = ordered_map, key, value) do
     if map[key] do
       ordered_map
     else
@@ -170,16 +252,16 @@ defmodule OrderedMap do
 
   ## Examples
 
-      iex> ordered_map = %OrderedMap{}
+      iex> ordered_map = OrderedMap.new()
       iex> ordered_map = OrderedMap.put_new!(ordered_map, "key1", 1)
       %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
       iex> OrderedMap.put_new!(ordered_map, "key1", 2)
       ** (RuntimeError) key "key1" already exists in: %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
   """
-  @spec put_new!(OrderedMap.t, term, term) :: OrderedMap.t | no_return
+  @spec put_new!(t, term, term) :: t | no_return
 
   def put_new!(ordered_map, key, value)
-  def put_new!(%OrderedMap{map: map} = ordered_map, key, value) do
+  def put_new!(%{map: map} = ordered_map, key, value) do
     if map[key] do
       raise "key #{inspect key} already exists in: #{inspect ordered_map}"
     else
@@ -196,14 +278,25 @@ defmodule OrderedMap do
       iex> OrderedMap.values(ordered_map)
       [1, 2]
 
-      iex> OrderedMap.values(%OrderedMap{})
+      iex> OrderedMap.values(OrderedMap.new())
       []
   """
-  @spec values(OrderedMap.t) :: [term]
+  @spec values(t) :: [term]
 
-  def values(ordered_map)
-  def values(%OrderedMap{} = ordered_map) do
+  def values(ordered_map) do
     Enum.map(ordered_map, & elem(&1, 1))
+  end
+end
+
+defimpl Collectable, for: OrderedMap do
+  def into(ordered_map) do
+      collector_fun = fn
+         map, {:cont, {key, value}} -> OrderedMap.put(map, key, value)
+         map,  :done        -> map
+        _set,  :halt        -> :ok
+      end
+
+      {ordered_map, collector_fun}
   end
 end
 
@@ -217,31 +310,30 @@ defimpl Enumerable, for: OrderedMap do
                 | {:halted, term}
                 | {:suspended, term, continuation}
 
-  defp _reduce(_, {:halt, acc}, _fun) do
-    {:halted, acc}
-  end
-  defp _reduce(omap, {:suspend, acc}, fun)  do
-    {:suspended, acc, &_reduce(omap, &1, fun)}
-  end
-  defp _reduce(%{keys: []}, {:cont, acc}, _fun) do
-    {:done, Enum.reverse(acc)}
-  end
-  defp _reduce(%{keys: [h | t], map: map}, {:cont, acc}, fun)  do
-    _reduce(%{keys: t, map: map}, fun.({h, map[h]}, acc), fun)
-  end
+  defp _reduce(_, {:halt, acc}, _fun),
+    do: {:halted, acc}
+
+  defp _reduce(ordered_map, {:suspend, acc}, fun),
+    do: {:suspended, acc, &_reduce(ordered_map, &1, fun)}
+
+  defp _reduce(%{keys: []}, {:cont, acc}, _fun),
+    do: {:done, Enum.reverse(acc)}
+
+  defp _reduce(%{keys: [h | t], map: map}, {:cont, acc}, fun),
+    do: _reduce(%{keys: t, map: map}, fun.({h, map[h]}, acc), fun)
 
   @spec reduce(t, acc, reducer) :: result
-  def reduce(ordered_map, acc, fun) do
-    _reduce(ordered_map, acc, fun)
-  end
+
+  def reduce(ordered_map, acc, fun),
+    do: _reduce(ordered_map, acc, fun)
 
   @spec member?(t, term) :: {:ok, boolean} | {:error, module}
-  def member?(ordered_map, key) do
-    OrderedMap.has_key?(ordered_map, key)
-  end
+
+  def member?(ordered_map, key),
+    do: OrderedMap.has_key?(ordered_map, key)
 
   @spec count(t) :: {:ok, non_neg_integer} | {:error, module}
-  def count(ordered_map) do
-    {:ok, ordered_map.size}
-  end
+
+  def count(ordered_map),
+    do: {:ok, ordered_map.size}
 end
