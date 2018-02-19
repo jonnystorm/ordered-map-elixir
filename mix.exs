@@ -3,7 +3,7 @@ defmodule OrderedMap.Mixfile do
 
   def project do
     [ app: :ordered_map,
-      version: "0.0.3",
+      version: "0.0.4",
       name: "OrderedMap",
       source_url: "https://github.com/jonnystorm/ordered-map-elixir",
       elixir: "~> 1.3",
