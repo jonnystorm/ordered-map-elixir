@@ -453,11 +453,11 @@ defimpl Enumerable, for: OrderedMap do
   defp _reduce(_, {:halt, acc}, _fun),
     do: {:halted, acc}
 
-  defp _reduce(ordered_map, {:suspend, acc}, fun),
-    do: {:suspended, acc, &_reduce(ordered_map, &1, fun)}
+  defp _reduce(omap, {:suspend, acc}, fun),
+    do: {:suspended, acc, &_reduce(omap, &1, fun)}
 
   defp _reduce(%{keys: []}, {:cont, acc}, _fun),
-    do: {:done, Enum.reverse(acc)}
+    do: {:done, acc}
 
   defp _reduce(
     %{keys: [h|t], map: map},
@@ -471,8 +471,14 @@ defimpl Enumerable, for: OrderedMap do
 
   @spec reduce(t, acc, reducer)
     :: result
-  def reduce(ordered_map, acc, fun),
-    do: _reduce(ordered_map, acc, fun)
+  def reduce(ordered_map, acc, fun) do
+    next_omap =
+      %{ordered_map |
+        keys: Enum.reverse(ordered_map.keys),
+      }
+
+    _reduce(next_omap, acc, fun)
+  end
 
   @spec member?(t, any)
     :: {:ok, boolean}

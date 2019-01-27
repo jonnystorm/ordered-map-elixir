@@ -29,4 +29,12 @@ defmodule OrderedMapTest do
         size: 2,
       }
   end
+
+  test """
+  `Enum.take/2` on empty ordered map returns empty list.
+  """ do
+    omap = OrderedMap.new
+
+    assert Enum.take(omap, 1) == []
+  end
 end
