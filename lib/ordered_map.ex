@@ -76,7 +76,7 @@ defmodule OrderedMap do
       %OrderedMap{
         keys: List.delete(keys, key),
          map: Map.delete(map, key),
-        size: size - 1
+        size: max(0, size - 1)
       }
 
     else
@@ -274,7 +274,7 @@ defmodule OrderedMap do
     new = %OrderedMap{
        keys: List.delete(keys, key),
         map: vestige,
-       size: size - 1,
+       size: max(0, size - 1),
     }
 
     {value, new}

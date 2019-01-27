@@ -37,4 +37,12 @@ defmodule OrderedMapTest do
 
     assert Enum.take(omap, 1) == []
   end
+
+  test """
+  `Map.delete/2` on empty ordered map returns sane omap.
+  """ do
+    omap = OrderedMap.new
+
+    assert Map.delete(omap, :a_key) == omap
+  end
 end
