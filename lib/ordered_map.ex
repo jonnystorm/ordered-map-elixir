@@ -3,21 +3,18 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 defmodule OrderedMap do
-  defstruct(
-    keys: nil,
-    map: nil,
-    size: nil
-  )
-
   @behaviour Access
+
+  defstruct [:keys, :map, :size]
 
   @type key :: any
 
-  @type t :: %OrderedMap{
-    keys: list,
-     map: map,
-    size: non_neg_integer,
-  }
+  @type t
+    :: %OrderedMap{
+         keys: [key],
+          map: map,
+         size: non_neg_integer,
+       }
 
   @doc """
   Returns a new ordered map.
@@ -27,9 +24,10 @@ defmodule OrderedMap do
       iex> OrderedMap.new()
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
-  @spec new :: t
-
-  def new, do: %OrderedMap{keys: [], map: %{}, size: 0}
+  @spec new
+    :: %OrderedMap{keys: [], map: %{}, size: 0}
+  def new,
+    do: %OrderedMap{keys: [], map: %{}, size: 0}
 
   @doc """
   Deletes the entry in `ordered_map` having key `key`.
@@ -65,11 +63,12 @@ defmodule OrderedMap do
       iex> OrderedMap.delete(OrderedMap.new(), "key")
       %OrderedMap{keys: [], map: %{}, size: 0}
   """
-  @spec delete(t, key) :: t
-
+  @spec delete(t, key)
+    :: t
   def delete(ordered_map, key)
+
   def delete(
-    %{keys: keys, map: map, size: size} = ordered_map,
+    %{keys: keys, map: map, size: size} = omap,
     key
   )   when size > 0
   do
@@ -81,12 +80,12 @@ defmodule OrderedMap do
       }
 
     else
-      ordered_map
+      omap
     end
   end
 
-  def delete(%OrderedMap{} = ordered_map, _),
-    do: ordered_map
+  def delete(%OrderedMap{} = omap, _),
+    do: omap
 
   @doc """
   Fetches the value for a specific `key` in the given
@@ -107,8 +106,10 @@ defmodule OrderedMap do
       iex> OrderedMap.fetch(ordered_map, "key")
       :error
   """
-  @spec fetch(t, key) :: {:ok, term} | :error
-
+  @spec fetch(t, key)
+    :: {:ok, term}
+     | :error
+  @impl Access
   def fetch(ordered_map, key) do
     if value = get(ordered_map, key) do
       {:ok, value}
@@ -146,9 +147,10 @@ defmodule OrderedMap do
       iex> OrderedMap.get(OrderedMap.new(), "key", :default)
       :default
   """
-  @spec get(t, key, default :: term) :: term
-
+  @spec get(t, key, default :: term)
+    :: term
   def get(ordered_map, key, default \\ nil)
+
   def get(%{map: map}, key, default),
     do: map[key] || default
 
@@ -173,8 +175,9 @@ defmodule OrderedMap do
         }
       }
   """
-  @spec get_and_update(t, key, list) :: {term, t}
-
+  @spec get_and_update(t, key, (any -> any))
+    :: {any, t}
+  @impl Access
   def get_and_update(ordered_map, key, fun)
       when is_function(fun)
   do
@@ -208,8 +211,8 @@ defmodule OrderedMap do
       iex> OrderedMap.has_key?(OrderedMap.new(), "key")
       false
   """
-  @spec has_key?(t, term) :: t
-
+  @spec has_key?(t, any)
+    :: boolean
   def has_key?(ordered_map, key)
 
   def has_key?(%{map: map}, key),
@@ -232,8 +235,8 @@ defmodule OrderedMap do
       iex> OrderedMap.keys OrderedMap.new()
       []
   """
-  @spec keys(t) :: [term]
-
+  @spec keys(t)
+    :: [term]
   def keys(ordered_map)
 
   def keys(%{keys: keys}),
@@ -260,8 +263,9 @@ defmodule OrderedMap do
         }
       }
   """
-  @spec pop(t, key) :: {term, t}
-
+  @spec pop(t, key)
+    :: {term, t}
+  @impl Access
   def pop(ordered_map, key)
 
   def pop(%{keys: keys, map: map, size: size}, key) do
@@ -309,8 +313,8 @@ defmodule OrderedMap do
         size: 2,
       }
   """
-  @spec put(t, term, term) :: t
-
+  @spec put(t, term, term)
+    :: t
   def put(ordered_map, key, value)
 
   def put(
@@ -349,8 +353,8 @@ defmodule OrderedMap do
         size: 1,
       }
   """
-  @spec put_new(t, term, term) :: t
-
+  @spec put_new(t, term, term)
+    :: t
   def put_new(ordered_map, key, value)
 
   def put_new(%{map: map} = ordered_map, key, value) do
@@ -379,15 +383,15 @@ defmodule OrderedMap do
       ** (RuntimeError) key "key1" already exists in: %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
   """
   @spec put_new!(t, term, term)
-    :: t | no_return
-
+    :: t
+     | no_return
   def put_new!(ordered_map, key, value)
 
-  def put_new!(%{map: map} = ordered_map, key, value) do
+  def put_new!(%{map: map} = omap, key, value) do
     if map[key] do
-      raise "key #{inspect key} already exists in: #{inspect ordered_map}"
+      raise "key #{inspect key} already exists in: #{inspect omap}"
     else
-      put(ordered_map, key, value)
+      put(omap, key, value)
     end
   end
 
@@ -408,11 +412,10 @@ defmodule OrderedMap do
       iex> OrderedMap.values OrderedMap.new()
       []
   """
-  @spec values(t) :: [term]
-
-  def values(ordered_map) do
-    Enum.map(ordered_map, & elem(&1, 1))
-  end
+  @spec values(t)
+    :: [term]
+  def values(ordered_map),
+    do: Enum.map(ordered_map, & elem(&1, 1))
 end
 
 defimpl Collectable, for: OrderedMap do
@@ -466,36 +469,53 @@ defimpl Enumerable, for: OrderedMap do
     _reduce(%{keys: t, map: map}, next_acc, fun)
   end
 
-  @spec reduce(t, acc, reducer) :: result
-
+  @spec reduce(t, acc, reducer)
+    :: result
   def reduce(ordered_map, acc, fun),
     do: _reduce(ordered_map, acc, fun)
 
-  @spec member?(t, term)
+  @spec member?(t, any)
     :: {:ok, boolean}
-     | {:error, module}
+     | {:error, atom}
+  def member?(ordered_map, key)
 
-  def member?(ordered_map, key),
-    do: OrderedMap.has_key?(ordered_map, key)
+  def member?(
+    %{keys: _, map: _, size: _} = omap,
+    key
+  ),
+    do: {:ok, OrderedMap.has_key?(omap, key)}
+
+  def member?(_, _),
+    do: {:error, __MODULE__}
 
   @spec count(t)
     :: {:ok, non_neg_integer}
      | {:error, module}
+  def count(ordered_map)
 
-  def count(ordered_map),
-    do: {:ok, ordered_map.size}
+  def count(%{keys: _, map: _, size: _} = omap),
+    do: {:ok, omap.size}
 
-  @type size        :: non_neg_integer
-  @type slicing_fun :: function
+  def count(_),
+    do: {:error, __MODULE__}
+
+  @type size :: non_neg_integer
+
+  @type slicing_fun
+    :: (non_neg_integer, pos_integer -> [any])
 
   @spec slice(t)
     :: {:ok, size, slicing_fun}
-     | {:error, module}
+     | {:error, atom}
+  def slice(ordered_map)
 
-  def slice(ordered_map) do
-    list = Enum.into(ordered_map, [])
+  def slice(%{keys: _, map: _, size: _} = omap) do
+    list = Enum.into(omap, [])
     fun  = &Enumerable.List.slice(list, &1, &2)
 
-    {:ok, ordered_map.size, fun}
+    {:ok, omap.size, fun}
   end
+
+  def slice(_),
+    do: {:error, __MODULE__}
 end
