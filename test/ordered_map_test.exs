@@ -31,7 +31,7 @@ defmodule OrderedMapTest do
   end
 
   test """
-  `Enum.take/2` on empty ordered map returns empty list.
+  `Enum.take/2` on empty ordered map returns empty list
   """ do
     omap = OrderedMap.new
 
@@ -39,10 +39,20 @@ defmodule OrderedMapTest do
   end
 
   test """
-  `Map.delete/2` on empty ordered map returns sane omap.
+  `Map.delete/2` on empty ordered map returns sane omap
   """ do
     omap = OrderedMap.new
 
     assert Map.delete(omap, :a_key) == omap
+  end
+
+  test """
+  `put/3` is idempotent
+  """ do
+    omap =
+      OrderedMap.new
+      |> Map.put(:k, 1)
+
+    assert Map.put(omap, :k, 1) == omap
   end
 end

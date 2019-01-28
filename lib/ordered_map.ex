@@ -318,18 +318,22 @@ defmodule OrderedMap do
   def put(ordered_map, key, value)
 
   def put(
-    %{keys: keys, map: map, size: size},
+    %{keys: keys, map: map, size: size} = omap,
     key,
     value
   ) do
-    new_keys = map[key] && keys || [key|keys]
-    new_size = map[key] && size || size + 1
+    if key in keys do
+      %{omap|map: Map.put(map, key, value)}
+    else
+      new_keys = map[key] && keys || [key|keys]
+      new_size = map[key] && size || size + 1
 
-    %OrderedMap{
-      keys: new_keys,
-       map: Map.put(map, key, value),
-      size: new_size,
-    }
+      %OrderedMap{
+        keys: new_keys,
+         map: Map.put(map, key, value),
+        size: new_size,
+      }
+    end
   end
 
   @doc """
