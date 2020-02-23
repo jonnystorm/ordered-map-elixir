@@ -521,7 +521,7 @@ defimpl Enumerable, for: OrderedMap do
 
   def slice(%{keys: _, map: _, size: _} = omap) do
     list = Enum.into(omap, [])
-    fun  = &Enumerable.List.slice(list, &1, &2)
+    fun  = &Enumerable.List.slice(list, &1, &2, omap.size)
 
     {:ok, omap.size, fun}
   end
