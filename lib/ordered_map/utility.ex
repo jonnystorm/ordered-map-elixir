@@ -1,4 +1,6 @@
 defmodule OrderedMap.Utility do
+  @moduledoc false
+
   defmacro slice_list_fun(list, size) do
     fun =
       fn args ->
