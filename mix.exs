@@ -3,7 +3,7 @@ defmodule OrderedMap.Mixfile do
 
   def project do
     [ app: :ordered_map,
-      version: "0.0.4",
+      version: "0.0.5",
       name: "OrderedMap",
       source_url: "https://github.com/jonnystorm/ordered-map-elixir",
       elixir: "~> 1.3",
@@ -14,7 +14,6 @@ defmodule OrderedMap.Mixfile do
       dialyzer: [
         add_plt_apps: [
           :logger,
-          :ssh,
           :ordered_map,
         ],
         ignore_warnings: "dialyzer.ignore",

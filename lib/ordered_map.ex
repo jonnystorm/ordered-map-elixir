@@ -440,6 +440,8 @@ defimpl Collectable, for: OrderedMap do
 end
 
 defimpl Enumerable, for: OrderedMap do
+  require OrderedMap.Utility, as: Utility
+
   @type t :: OrderedMap.t
 
   @type acc
@@ -521,7 +523,7 @@ defimpl Enumerable, for: OrderedMap do
 
   def slice(%{keys: _, map: _, size: _} = omap) do
     list = Enum.into(omap, [])
-    fun  = &Enumerable.List.slice(list, &1, &2)
+    fun  = Utility.slice_list_fun(list, omap.size)
 
     {:ok, omap.size, fun}
   end

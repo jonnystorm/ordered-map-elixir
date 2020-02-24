@@ -55,4 +55,14 @@ defmodule OrderedMapTest do
 
     assert Map.put(omap, :k, 1) == omap
   end
+
+  test """
+  `Enum.slice/3` works for size in excess of omap
+  """ do
+    omap =
+      [k1: 1, k2: 2, k3: 3]
+      |> Enum.into(OrderedMap.new)
+
+    assert Enum.slice(omap, 1, 3) == [k2: 2, k3: 3]
+  end
 end
