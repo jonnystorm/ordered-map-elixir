@@ -45,7 +45,7 @@ defmodule OrderedMap.Mixfile do
   defp package do
     [
       licenses: ["MPL-2.0"],
-      links: %{GitHub: @source_url}
+      links: %{GitLab: @source_url}
     ]
   end
 
