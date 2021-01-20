@@ -10,14 +10,14 @@ Add `ordered_map` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:ordered_map, "~> 0.1.0"}]
+  [{:ordered_map, "~> 0.0.5"}]
 end
 ```
 
 ## Docs
 
-Read [here](https://hexdocs.pm/ordered_map/doc/OrderedMap.html).
+Read [here](https://hexdocs.pm/ordered_map/OrderedMap.html).
 
 ## License
 
-MPL-2.0
+[MPL-2.0](./COPYING.MPL)
