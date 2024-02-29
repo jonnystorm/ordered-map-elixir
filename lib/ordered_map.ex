@@ -72,7 +72,7 @@ defmodule OrderedMap do
     key
   )   when size > 0
   do
-    if map[key] do
+    if Map.has_key?(map, key) do
       %OrderedMap{
         keys: List.delete(keys, key),
          map: Map.delete(map, key),
@@ -152,7 +152,7 @@ defmodule OrderedMap do
   def get(ordered_map, key, default \\ nil)
 
   def get(%{map: map}, key, default),
-    do: map[key] || default
+    do: Map.get(map, key, default)
 
   @doc """
   Gets the value from `key` and updates it, all in one pass.
@@ -299,13 +299,6 @@ defmodule OrderedMap do
         map: %{"key1" => 1, "key2" => 2},
         size: 2,
       }
-
-      iex> ordered_map =
-      ...> %OrderedMap{
-      ...>   keys: ["key2", "key1"],
-      ...>   map: %{"key1" => 1, "key2" => 2},
-      ...>   size: 2,
-      ...> }
       iex> OrderedMap.put(ordered_map, "key2", 3)
       %OrderedMap{
         keys: ["key2", "key1"],
@@ -325,13 +318,10 @@ defmodule OrderedMap do
     if key in keys do
       %{omap|map: Map.put(map, key, value)}
     else
-      new_keys = map[key] && keys || [key|keys]
-      new_size = map[key] && size || size + 1
-
       %OrderedMap{
-        keys: new_keys,
+        keys: [key|keys],
          map: Map.put(map, key, value),
-        size: new_size,
+        size: size+1,
       }
     end
   end
@@ -362,7 +352,7 @@ defmodule OrderedMap do
   def put_new(ordered_map, key, value)
 
   def put_new(%{map: map} = ordered_map, key, value) do
-    if map[key] do
+    if Map.has_key?(map, key) do
       ordered_map
     else
       put(ordered_map, key, value)
@@ -384,7 +374,7 @@ defmodule OrderedMap do
         size: 1,
       }
       iex> OrderedMap.put_new!(ordered_map, "key1", 2)
-      ** (RuntimeError) key "key1" already exists in: %OrderedMap{keys: ["key1"], map: %{"key1" => 1}, size: 1}
+      ** (RuntimeError) key \"key1\" already exists in: %OrderedMap{size: 1, keys: [\"key1\"], map: %{\"key1\" => 1}}
   """
   @spec put_new!(t, term, term)
     :: t
@@ -392,7 +382,7 @@ defmodule OrderedMap do
   def put_new!(ordered_map, key, value)
 
   def put_new!(%{map: map} = omap, key, value) do
-    if map[key] do
+    if Map.has_key?(map, key) do
       raise "key #{inspect key} already exists in: #{inspect omap}"
     else
       put(omap, key, value)

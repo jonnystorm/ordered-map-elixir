@@ -65,4 +65,33 @@ defmodule OrderedMapTest do
 
     assert Enum.slice(omap, 1, 3) == [k2: 2, k3: 3]
   end
+
+  test """
+  GitHub issue #7: Problem in OrderedMap.delete
+
+  > Where if the value is false it won't work.
+  """ do
+    # test our assumptions
+    omap = OrderedMap.new
+    assert length(omap.keys) == 0
+
+    omap = OrderedMap.put(omap, :k, false)
+    assert length(omap.keys) == 1
+
+    # should not erroneously return the default "fail"
+    assert OrderedMap.get(omap, :k, "fail") == false
+
+    # should not overwrite the previous value `false`
+    omap = OrderedMap.put_new(omap, :k, true)
+    assert OrderedMap.get(omap, :k) == false
+
+    # should raise on attempted overwrite
+    assert_raise RuntimeError, fn ->
+      OrderedMap.put_new!(omap, :k, true)
+    end
+
+    # should not fail to remove existing key/value
+    omap = OrderedMap.delete(omap, :k)
+    assert length(omap.keys) == 0
+  end
 end
