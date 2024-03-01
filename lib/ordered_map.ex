@@ -374,7 +374,7 @@ defmodule OrderedMap do
         size: 1,
       }
       iex> OrderedMap.put_new!(ordered_map, "key1", 2)
-      ** (RuntimeError) key \"key1\" already exists in: %OrderedMap{size: 1, keys: [\"key1\"], map: %{\"key1\" => 1}}
+      ** (RuntimeError) key \"key1\" already exists
   """
   @spec put_new!(t, term, term)
     :: t
@@ -383,7 +383,7 @@ defmodule OrderedMap do
 
   def put_new!(%{map: map} = omap, key, value) do
     if Map.has_key?(map, key) do
-      raise "key #{inspect key} already exists in: #{inspect omap}"
+      raise "key #{inspect key} already exists"
     else
       put(omap, key, value)
     end

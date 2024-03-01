@@ -37,6 +37,17 @@ defmodule OrderedMap.Utility do
       ) ->
         #&Enumerable.List.slice(unquote(list), &1, &2, unquote(size))
         fun.([list, {:&, [], [1]}, {:&, [], [2]}, size])
+
+      Kernel.function_exported?(
+        Enumerable.List,
+        :slice,
+        1
+      ) ->
+        # Rather than returning an Enumerable.slicing_fun(),
+        # we opt to pass an Enumerable.to_list_fun().
+        quote do
+          fn _term -> unquote(list) end
+        end
     end
   end
 end

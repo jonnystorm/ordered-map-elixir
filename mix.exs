@@ -1,7 +1,7 @@
 defmodule OrderedMap.Mixfile do
   use Mix.Project
 
-  @version "0.0.6"
+  @version "0.0.7"
   @source_url "https://gitlab.com/jonnystorm/ordered-map-elixir"
 
   def project do
