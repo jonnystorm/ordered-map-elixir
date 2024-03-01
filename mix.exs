@@ -1,7 +1,7 @@
 defmodule OrderedMap.Mixfile do
   use Mix.Project
 
-  @version "0.0.7"
+  @version "0.0.8"
   @source_url "https://gitlab.com/jonnystorm/ordered-map-elixir"
 
   def project do
@@ -35,11 +35,11 @@ defmodule OrderedMap.Mixfile do
   end
 
   def application do
-    [applications: [:logger]]
+    []
   end
 
   defp deps do
-    [{:ex_doc, "~> 0.23", only: :dev}]
+    [{:ex_doc, "~> 0.31", only: :dev}]
   end
 
   defp package do

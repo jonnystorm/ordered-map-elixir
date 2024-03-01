@@ -10,7 +10,7 @@ Add `ordered_map` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:ordered_map, "~> 0.0.7"}]
+  [{:ordered_map, "~> 0.0.8"}]
 end
 ```
 
